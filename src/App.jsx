@@ -1,10 +1,28 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from "react";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "/vite.svg";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
+  const [missive, setMissive] = useState();
+  const [conversationIds, setConversationIds] = useState([]);
+
+  useEffect(() => {
+    if (!missive) {
+      console.log("initialRun");
+      setMissive(window.Missive);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!missive) return;
+
+    console.log("missive");
+    missive.on("change:conversations", (ids) => setConversationIds(ids || []), {
+      retroactive: true,
+    });
+  }, [missive]);
 
   return (
     <>
@@ -29,7 +47,7 @@ function App() {
         Click on the Vite and React logos to learn more
       </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
